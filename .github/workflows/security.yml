@@ -104,7 +104,7 @@ jobs:
   # CVEs conocidos en los paquetes de requirements.txt.
   # ═══════════════════════════════════════════════════════════════════════════
   sca:
-    name: SCA - pip-audit
+    name: 'SCA - pip-audit'
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
