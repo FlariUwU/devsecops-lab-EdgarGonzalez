@@ -112,52 +112,26 @@ jobs:
       - name: Checkout del repositorio
         uses: actions/checkout@v4
 
-      # Paso 2: configurar la versión de Python en el runner.
-      # La action "setup-python" hace disponible el comando python y pip.
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      # TODO ▼ ─────────────────────────────────────────────────────────────
-      # Paso 3: instalar pip-audit y ejecutar la auditoría.
-      #
-      # pip-audit se instala con pip igual que cualquier paquete.
-      # Para auditar un archivo de dependencias específico:
-      #   pip-audit -r <ruta-al-requirements.txt>
-      #
-      # Recuerda: el requirements.txt está en:
-      #   Unidad_3_Seguridad_en_Aplicaciones_y_Datos/devsecops-lab/app/requirements.txt
-      #
-      # Pregunta: ¿qué CVEs aparecen al correr la auditoría?
-      #           ¿Cuáles de los paquetes tienen versiones seguras disponibles?
       - name: Instalar y ejecutar pip-audit
         run: |
-         sca:
-          name: 'SCA - pip-audit'
-          runs-on: ubuntu-latest
-          steps:
-            - name: Checkout codigo
-              uses: actions/checkout@v4
-            - name: Configurar Python
-              uses: actions/setup-python@v5
-              with:
-                python-version: '3.11'
-           - name: Instalar y ejecutar pip-audit
-             run: |
-               pip install pip-audit
-               pip-audit -r Unidad_3_Seguridad_en_Aplicaciones_y_Datos/devsecops-lab/app/requirements.txt \
-                       --format=json \
-                       --output=audit-report.json || true
-               echo '--- Reporte de CVEs ---'
-               pip-audit -r Unidad_3_Seguridad_en_Aplicaciones_y_Datos/devsecops-lab/app/requirements.txt
+          pip install pip-audit
+          pip-audit -r Unidad_3_Seguridad_en_Aplicaciones_y_Datos/devsecops-lab/app/requirements.txt \
+            --format=json \
+            --output=audit-report.json || true
+          echo '--- Reporte de CVEs ---'
+          pip-audit -r Unidad_3_Seguridad_en_Aplicaciones_y_Datos/devsecops-lab/app/requirements.txt
 
-            - name: Guardar reporte de auditoria
-              uses: actions/upload-artifact@v4
-              if: always()
-              with:
-                name: pip-audit-report
-                path: audit-report.json
+      - name: Guardar reporte de auditoria
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pip-audit-report
+          path: audit-report.json
 
 
   # ═══════════════════════════════════════════════════════════════════════════
